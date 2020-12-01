@@ -1,0 +1,50 @@
+=======1=======
+Match(m:Movie) RETURN m
+
+=======2=======
+MATCH p=(:Person{name:'Hugo Weaving'})-[r:ACTED_IN]->(movie:Movie) RETURN p
+
+=======3=======
+MATCH p=(hugo:Person{name:'Hugo Weaving'})-[r1:ACTED_IN]->(movie:Movie)<-[r2:DIRECTED]-(director:Person) RETURN  p
+
+=======4=======
+MATCH p=(hugo:Person{name:'Hugo Weaving'})-[r1:ACTED_IN]->(movie:Movie)<-[r2:ACTED_IN]-(person:Person) RETURN  p
+
+=======5=======
+MATCH p=(matrix:Movie{title:'The Matrix'})<-[r1:ACTED_IN]-(person:Person)-[r2:ACTED_IN]->(movie:Movie) RETURN  p
+
+=======6=======
+MATCH p=(actor:Person)-[r1:ACTED_IN]->(movie:Movie) RETURN actor.name,COUNT(movie) as movie_count
+
+=======7=======
+MATCH p=(director:Person)-[r1:DIRECTED]->(movie:Movie)<-[r2:WROTE]-(screenwriter:Person) WHERE screenwriter=director  RETURN director.name as name, movie.title as title
+
+=======8=======
+MATCH p=(hugo:Person{name:'Hugo Weaving'})-[r1:ACTED_IN]->(movie:Movie)<-[r2:ACTED_IN]-(person:Person{name:'Keanu Reeves'}) RETURN  movie
+
+=======9=======
+zapytanie 1:
+CREATE (CaptainAmericaTheFirstAvenger:Movie {title:'Captain America: The First Avenger', tagline:'Steve Rogers, a rejected military soldier, transforms into Captain America after taking a dose of a "Super-Soldier serum". But being Captain America comes at a price as he attempts to take down a war monger and a terrorist organization.', released: 2011})
+CREATE (ChrisEvans:Person {name: 'Chris Evans', born:1981})
+CREATE (HayleyAtwell:Person {name: 'Hayley Atwell', born:1982})
+CREATE (SebastianStan:Person {name: 'Sebastian Stan', born:1982})
+CREATE (TommyLeeJones:Person {name: 'Tommy Lee Jones', born:1946})
+CREATE (JoeJohnston:Person {name: 'Joe Johnston', born:1950})
+CREATE (ChristopherMarkus: Person {name: 'Christopher Markus', born:1970})
+CREATE (StephenMcFeely:Person {name: 'Stephen McFeely', born:1969})
+CREATE
+(ChrisEvans)-[:ACTED_IN {roles:['Captain America','Steve Rogers']}]->(CaptainAmericaTheFirstAvenger),
+(HayleyAtwell)-[:ACTED_IN {roles:['Peggy Carter']}]->(CaptainAmericaTheFirstAvenger),
+(SebastianStan)-[:ACTED_IN {roles:["James Buchanan 'Bucky' Barnes"]}]->(CaptainAmericaTheFirstAvenger),
+(TommyLeeJones)-[:ACTED_IN {roles:['Colonel Chester Phillips']}]->(CaptainAmericaTheFirstAvenger),
+(JoeJohnston)-[:DIRECTED]->(CaptainAmericaTheFirstAvenger),
+(ChristopherMarkus)-[:WROTE]->(CaptainAmericaTheFirstAvenger),
+(StephenMcFeely)-[:WROTE]->(CaptainAmericaTheFirstAvenger)
+
+zapytanie2:
+MATCH (person:Person { name: 'Hugo Weaving' }),(movie:Movie { title: 'Captain America: The First Avenger' })
+MERGE (person)-[r1:ACTED_IN {roles: ['Johann Schmidt', 'Red Skull']}]->(movie)
+
+zapytanie3:
+MATCH (movie:Movie{title:'Captain America: The First Avenger'})<-[r1]-(person:Person) return movie,person,r1
+
